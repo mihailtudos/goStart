@@ -1,14 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
 func main() {
-	var name string = "Unknown"
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
-	fmt.Println("Hello " + name)
+	makeItBlue()
+}
+
+func makeItBlue() {
+	color := "green"
+	color = "blue"
+	fmt.Println(color)
 }
