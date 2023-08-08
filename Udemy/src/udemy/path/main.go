@@ -5,10 +5,173 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 )
 
 func main() {
-	greetFivePpl()
+	printFTest()
+}
+
+func printFTest() {
+	var (
+		planet   = "venus"
+		distance = 261
+		orbital  = 224.701
+		hasLife  = false
+	)
+
+	// swiss army knife %v verb
+	fmt.Printf("Planet: %v\n", planet)
+	fmt.Printf("Distance: %v millions kms\n", distance)
+	fmt.Printf("Orbital Period: %v days\n", orbital)
+	fmt.Printf("Does %v have life? %v\n", planet, hasLife)
+
+	// argument indexing - indexes start from 1
+	fmt.Printf(
+		"%v is %v away. Think! %[2]v kms! %[1]v OMG.\n",
+		planet, distance,
+	)
+
+	// why use other verbs than? because: type-safety
+	// uncomment to see the warnings:
+	//
+	// fmt.Printf("Planet: %d\n", planet)
+	// fmt.Printf("Distance: %s millions kms\n", distance)
+	// fmt.Printf("Orbital Period: %t days\n", orbital)
+	// fmt.Printf("Does %v has life? %f\n", planet, hasLife)
+
+	// correct verbs:
+	// fmt.Printf("Planet: %s\n", planet)
+	// fmt.Printf("Distance: %d millions kms\n", distance)
+	// fmt.Printf("Orbital Period: %f days\n", orbital)
+	// fmt.Printf("Does %s has life? %t\n", planet, hasLife)
+
+	// precision
+	fmt.Printf("Orbital Period: %f days\n", orbital)
+	fmt.Printf("Orbital Period: %.0f days\n", orbital)
+	fmt.Printf("Orbital Period: %.1f days\n", orbital)
+	fmt.Printf("Orbital Period: %.2f days\n", orbital)
+}
+
+func iotaSeasons() {
+	const (
+		Winter = 12 - (iota * 3)
+		Fall
+		Summer
+		Spring
+	)
+	fmt.Println(Winter, Spring, Summer, Fall)
+}
+
+func enumConst2() {
+	const _ = iota
+	const (
+		_ = iota
+		Jan
+		Feb
+		Mar
+	)
+	fmt.Println(Jan, Feb, Mar)
+}
+
+func enumConst() {
+	const max = 11
+	const (
+		Nov = max - iota
+		Oct
+		Sep
+	)
+	fmt.Println(Nov, Oct, Sep)
+}
+
+func trimRight() {
+	name := "inanç           "
+	fmt.Println(utf8.RuneCountInString(strings.TrimRight(name, " ")))
+}
+
+func trimIt() {
+	msg := `
+	
+	The weather looks good.
+I should go and play.
+
+
+
+	`
+
+	fmt.Println(strings.TrimSpace(msg))
+}
+
+func toLower() {
+	input := os.Args[1]
+	fmt.Println(strings.ToLower(input))
+	fmt.Println()
+}
+
+func improveTheBanger() {
+	var msg string
+	fmt.Println("Please enter a message:")
+	fmt.Scanln(&msg)
+	l := utf8.RuneCountInString(msg)
+
+	s := msg + strings.Repeat("!", l)
+
+	fmt.Println(s)
+}
+
+func countTheChars() {
+	var name string
+	fmt.Println("Please enter your name:")
+	fmt.Scanln(&name)
+
+	fmt.Printf(`Your name is %d long`, utf8.RuneCountInString(name))
+	fmt.Println()
+}
+
+func rawConcat() {
+	var name string
+	fmt.Scanln(&name)
+	msg := `hi %s!
+how are you?
+`
+
+	fmt.Printf(msg, name)
+}
+
+func printJson() {
+	json := "\n" +
+		"{\n" +
+		"\t\"Items\": [{\n" +
+		"\t\t\"Item\": {\n" +
+		"\t\t\t\"name\": \"Teddy Bear\"\n" +
+		"\t\t}\n" +
+		"\t}]\n" +
+		"}\n"
+	json = `
+{
+	"Items": [{
+		"Item": {
+			"name": "Teddy Bear"
+		}
+	}]
+}
+`
+	fmt.Println(json)
+}
+
+func windowPath() {
+	path := `
+	c:\program files\duper super\fun.txt
+	c:\program files\really\funny.png
+	`
+	fmt.Println(path)
+}
+
+func repeatChar() {
+	w := os.Args[1]
+	w1 := strings.Repeat("!", len(w)) + w + strings.Repeat("!", len(w))
+	fmt.Println(w1)
 }
 
 func greetFivePpl() {
