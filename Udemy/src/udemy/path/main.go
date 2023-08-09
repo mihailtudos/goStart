@@ -10,7 +10,64 @@ import (
 )
 
 func main() {
-	printFTest()
+	printFullName()
+}
+
+func printFullName() {
+	var ( 
+		fn, ln string
+	)
+	fmt.Println("Enter your first name:")
+	fmt.Scanln(&fn)
+	fmt.Println("Enter your last name:")
+	fmt.Scanln(&ln)
+
+	fmt.Printf("%s %s\n", fn, ln)
+}
+
+func printTypeBool(v bool) {
+	fmt.Printf("Type of %v is %[1]T.\n", v)
+}
+
+func printTypeString(v string) {
+	fmt.Printf("Type of %v is %[1]T.\n", v)
+}
+
+func printTypeFloat(v float64) {
+	fmt.Printf("Type of %v is %[1]T.\n", v)
+}
+
+func printTypeInt(v int) {
+	fmt.Printf("Type of %v is %[1]T.\n", v)
+}
+
+func printQuote() {
+	msg := "Hello World"
+	fmt.Printf("%q\n", msg)
+}
+
+func printTheTemp() {
+	t := 24.2612
+	fmt.Printf("Temperature is %.2f degrees.\n", t)
+}
+
+func falseClaims() {
+	tf := false
+	fmt.Printf("There are %t claims.", tf)
+}
+
+func printYourName() {
+	fn := os.Args[1]
+	ln := os.Args[2]
+	fmt.Printf("%s %s\n", fn, ln)
+}
+
+func printYourAge() {
+	fmt.Println("Enter your age:")
+	var age string
+	fmt.Scanln(&age)
+	fmt.Printf("My age is %s\n", age)
+
 }
 
 func printFTest() {
