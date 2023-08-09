@@ -6,15 +6,161 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"unicode"
 	"unicode/utf8"
+
+	"golang.org/x/exp/slices"
+	"golang.org/x/exp/utf8string"
 )
 
+type Creds struct {
+	username string
+	password string
+}
+
 func main() {
-	printFullName()
+	challengeTwo()
+}
+
+func challengeTwo() {
+	l := len(os.Args)
+	if l != 3 {
+		fmt.Println("Usage: [username] [password]")
+		return
+	}
+
+	c := []Creds{{username: "jack", password: "1888"}, {username: "inanc", password: "1879"}}
+	un, pw := os.Args[1], os.Args[2]
+	var cUser Creds
+
+	for _, user := range c {
+		if user.username == un {
+			cUser = user
+			break
+		}
+	}
+
+	if cUser == (Creds{}) {
+		fmt.Printf("Access denied for %q\n", un)
+	} else if cUser.username == un && cUser.password == pw {
+		fmt.Printf("Access granted to %q\n", un)
+	} else {
+		fmt.Printf("Invalid pw for %q\n", un)
+	}
+}
+
+func challengeOne() {
+	l := len(os.Args)
+	if l != 3 {
+		fmt.Println("Usage: [username] [password]")
+		return
+	}
+
+	c := Creds{username: "jack", password: "1888"}
+
+	un, pw := os.Args[1], os.Args[2]
+
+	if c.username == un && c.password == pw {
+		fmt.Printf("Access granted to %q\n", un)
+	} else if c.username == un {
+		fmt.Printf("Invalid pw for %q\n", un)
+	} else {
+		fmt.Printf("Access denied for %q\n", un)
+	}
+}
+
+func vowelOrCons() {
+	l := len(os.Args)
+	var input = ""
+	if l == 2 {
+		input = os.Args[1]
+	} else {
+		fmt.Println("Give me a letter")
+		return
+	}
+
+	if len(input) > 1 {
+		fmt.Println("Give me a letter")
+		return
+	}
+
+	first := unicode.ToLower(utf8string.NewString(input).At(0))
+
+	if isVowel(first) {
+		fmt.Printf("%q it's a vowel.\n", first)
+		return
+	}
+
+	if isSemiVowel(first) {
+		fmt.Printf("%q is sometimes a vowel, sometimes not.\n", first)
+		return
+	}
+
+	fmt.Printf("%q is a consonant.\n", first)
+}
+
+func isVowel(f rune) bool {
+	vowels := []rune{'a', 'e', 'o', 'i'}
+
+	idx := slices.IndexFunc(vowels, func(r rune) bool {
+		return r == f
+	})
+
+	return idx != -1
+}
+
+func isSemiVowel(f rune) bool {
+	semi := []rune{'y', 'w'}
+
+	idx := slices.IndexFunc(semi, func(r rune) bool {
+		return r == f
+	})
+
+	return idx != -1
+}
+
+func argCount() {
+	s := len(os.Args)
+
+	if s == 1 {
+		fmt.Println("Give me args")
+	} else if s == 2 {
+		fmt.Printf("There is one: %q\n", os.Args[1])
+	} else if s == 3 {
+		str := os.Args[1] + " " + os.Args[2]
+
+		fmt.Printf("There are two: %q\n", str)
+	} else {
+		fmt.Printf("There are %d arguments.\n", s)
+	}
+}
+
+func simplifyCondition() {
+	isSphere, radius := true, 200
+
+	if isSphere && radius >= 200 {
+		fmt.Println("It's a big sphere.")
+	} else {
+		fmt.Println("I don't know.")
+	}
+}
+
+func printAge(age int) {
+	if age > 60 {
+		fmt.Println("Getting older")
+	} else if age > 30 {
+		fmt.Println("Getting wiser")
+	} else if age > 20 {
+		fmt.Println("Adulthood")
+	} else if age > 10 {
+		fmt.Println("Young blood")
+	} else {
+		fmt.Println("Booting up")
+	}
 }
 
 func printFullName() {
-	var ( 
+	var (
 		fn, ln string
 	)
 	fmt.Println("Enter your first name:")
