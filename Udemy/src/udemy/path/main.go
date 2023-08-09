@@ -6,6 +6,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"udemy.com/path/utils"
 	"unicode"
 	"unicode/utf8"
 
@@ -19,7 +20,24 @@ type Creds struct {
 }
 
 func main() {
-	challengeTwo()
+	convertFeetToMeters()
+}
+
+func convertFeetToMeters() {
+	if len(os.Args) < 2 {
+		fmt.Println(utils.Usage)
+		return
+	}
+
+	arg := os.Args[1]
+	feet, err := strconv.ParseFloat(arg, 64)
+	if err != nil {
+		fmt.Printf("error: %q is not a number.\n", arg)
+		return
+	}
+
+	meters := feet * 0.3048
+	fmt.Printf("%g feet is %0.2g meters.\n", feet, meters)
 }
 
 func challengeTwo() {
