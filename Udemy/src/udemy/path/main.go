@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+	"time"
 	"udemy.com/path/utils"
 	"unicode"
 	"unicode/utf8"
@@ -20,7 +22,331 @@ type Creds struct {
 }
 
 func main() {
-	convertFeetToMeters()
+	operationsTable()
+}
+
+func operationsTable() {
+	ops := []string{"*", "/", "-", "+", "%"}
+
+	switch n := len(os.Args); {
+	case n == 1:
+		fmt.Println("Usage: [op=*/+-] [size]")
+		return
+	case n == 2:
+		fmt.Println("Usage: [op=*/+-] [size]")
+		return
+	case n == 3:
+		n, err := strconv.Atoi(os.Args[2])
+		if !slices.Contains(ops, os.Args[1]) || err != nil || n < 0 {
+			fmt.Println("Invalid operator.")
+			return
+		}
+	default:
+		fmt.Println("Invalid input")
+		return
+	}
+
+	s, err := strconv.Atoi(os.Args[2])
+	if err != nil || s < 1 {
+
+	}
+
+	header := os.Args[1]
+	for i := 0; i <= s; i++ {
+		header += "\t" + strconv.Itoa(i)
+	}
+	fmt.Println(header)
+
+	for i := 0; i <= s; i++ {
+		row := strconv.Itoa(i) + "\t"
+		for j := 0; j <= s; j++ {
+			switch os.Args[1] {
+			case "*":
+				row += strconv.Itoa(j*i) + "\t"
+			case "/":
+				if i == 0 || j == 0 {
+					row += strconv.Itoa(0) + "\t"
+				} else {
+					row += strconv.Itoa(i/j) + "\t"
+				}
+			case "-":
+				row += strconv.Itoa(j-i) + "\t"
+			case "+":
+				row += strconv.Itoa(j+i) + "\t"
+			case "%":
+				if i == 0 || j == 0 {
+					row += strconv.Itoa(0) + "\t"
+				} else {
+					row += strconv.Itoa(i%j) + "\t"
+				}
+			}
+		}
+
+		fmt.Println(row)
+	}
+}
+
+func multiplicationTable() {
+	if len(os.Args) != 2 {
+		fmt.Println("Give me the size of the table")
+		return
+	}
+
+	s, err := strconv.Atoi(os.Args[1])
+	if err != nil || s < 1 {
+		fmt.Println("Wrong size")
+		return
+	}
+
+	header := "X "
+	for i := 0; i <= s; i++ {
+		header += "\t" + strconv.Itoa(i)
+	}
+	fmt.Println(header)
+	for i := 0; i <= s; i++ {
+		row := strconv.Itoa(i) + "\t"
+		for j := 0; j <= s; j++ {
+			row += strconv.Itoa(j*i) + "\t"
+		}
+		fmt.Println(row)
+	}
+}
+
+func convertToSwitch2() {
+	if len(os.Args) != 2 {
+		fmt.Println("Give me a month name")
+		return
+	}
+
+	year := time.Now().Year()
+	leap := year%4 == 0 && (year%100 != 0 || year%400 == 0)
+
+	days, month := 28, os.Args[1]
+
+	switch strings.ToLower(month) {
+	case "april", "june", "september", "november":
+		days = 30
+	case "march", "january", "may", "july", "august", "october", "december":
+		days = 31
+	case "february":
+		if leap {
+			days = 29
+		}
+	default:
+		fmt.Printf("%q is not a month.\n", month)
+		return
+
+	}
+
+	fmt.Printf("%q has %d days.\n", month, days)
+}
+
+func stringManipulator() {
+	const def = ` [command] [string]
+
+Available commands: lower, upper and title`
+	if len(os.Args) != 3 {
+		fmt.Println(def)
+		return
+	}
+	cmd, str := os.Args[1], os.Args[2]
+
+	switch cmd {
+	case "lower":
+		fmt.Println(strings.ToLower(str))
+	case "upper":
+		fmt.Println(strings.ToUpper(str))
+	case "title":
+		fmt.Println(strings.ToTitle(str))
+	default:
+		fmt.Printf("Unknown command: %q", cmd)
+
+	}
+}
+
+func convertToSwitch() {
+	const (
+		usage       = "Usage: [username] [password]"
+		errUser     = "Access denied for %q.\n"
+		errPwd      = "Invalid password for %q.\n"
+		accessOK    = "Access granted to %q.\n"
+		user, user2 = "jack", "inanc"
+		pass, pass2 = "1888", "1879"
+	)
+
+	args := os.Args
+
+	if len(args) != 3 {
+		fmt.Println(usage)
+		return
+	}
+
+	u, p := args[1], args[2]
+
+	switch {
+	case u != user && u != user2:
+		fmt.Printf(errUser, u)
+	case u == user && p == pass:
+		fmt.Printf(accessOK, u)
+	case u == user2 && p == pass2:
+		fmt.Printf(accessOK, u)
+	default:
+		fmt.Printf(errPwd, u)
+	}
+}
+
+func richterScale() {
+	if len(os.Args) != 2 {
+		fmt.Println("Please provide a number.")
+		return
+	}
+
+	if n, err := strconv.ParseFloat(os.Args[1], 64); err == nil {
+		var desc string
+		switch true {
+		case n < 2.0:
+			desc = "very minor"
+		case n < 3.0:
+			desc = "very minor"
+		case n < 4.0:
+			desc = "minor"
+		case n < 5.0:
+			desc = "light"
+		default:
+			desc = "massive"
+		}
+
+		r := "less than 2.0"
+		if n > 2 && n < 10 {
+			r = strconv.FormatFloat(math.Floor(n), 'f', 0, 64) + " - " + strconv.FormatFloat(math.Ceil(n)-0.1, 'f', 1, 64)
+		} else if n >= 10 {
+			r = "10+"
+		}
+
+		fmt.Printf("%v's richter scale is %v.\n", desc, r)
+	} else {
+		fmt.Println("Give me a number.")
+	}
+}
+
+func getPeriodOfDay() {
+	fmt.Printf("Current time is: %v:%v\n", time.Now().Local().Hour(), time.Now().Local().Minute())
+
+	switch hour := time.Now().Hour(); {
+	case hour >= 18:
+		fmt.Println("evening")
+	case hour >= 12:
+		fmt.Println("afternoon")
+	case hour >= 6:
+		fmt.Println("morning")
+	default:
+		fmt.Println("night")
+	}
+}
+
+func getMonthDays() {
+	year := time.Now().Year()
+	if len(os.Args) != 2 {
+		fmt.Println("Give me a month name")
+		return
+	}
+	month := strings.ToLower(os.Args[1])
+
+	monthsOf31Days := []string{"january", "march", "may", "july", "august", "october", "december"}
+	monthsOf30Days := []string{"april", "june", "september", "november"}
+
+	idx := slices.IndexFunc(monthsOf31Days, func(e string) bool {
+		return month == e
+	})
+
+	if idx != -1 {
+		fmt.Printf("%s has %d dats.\n", month, 31)
+		return
+	}
+
+	idx = slices.IndexFunc(monthsOf30Days, func(e string) bool {
+		return month == e
+	})
+
+	if idx != -1 {
+		fmt.Printf("%s has %d dats.\n", month, 30)
+		return
+	}
+
+	if month == "february" {
+		if year%4 == 0 && (year%100 != 0 || year%400 == 0) {
+			fmt.Printf("%s has %d dats.\n", month, 29)
+		} else {
+			fmt.Printf("%s has %d dats.\n", month, 28)
+		}
+		return
+	}
+
+	fmt.Println("Give me a month name")
+}
+
+func lapYear() {
+	if len(os.Args) != 2 {
+		fmt.Println("Give me a year number")
+		return
+	}
+
+	if n, err := strconv.ParseInt(os.Args[1], 10, 64); err == nil {
+		if n%4 == 0 && (n%100 != 0 || n%400 == 0) {
+			fmt.Printf("%d is a lap year\n", n)
+		} else {
+			fmt.Printf("%d is not a lap year\n", n)
+		}
+
+		return
+	}
+
+	println("Give me a year number")
+}
+
+func oddEven() {
+	if len(os.Args) != 2 {
+		fmt.Println("Pick a number")
+		return
+	}
+
+	var msg string
+	if n, err := strconv.ParseInt(os.Args[1], 10, 64); err == nil {
+		if n%2 == 0 {
+			msg = "%d is even number"
+		} else {
+			msg = "%d is odd number"
+		}
+
+		if n%8 == 0 {
+			msg += " and it's divisible by 8."
+		}
+
+		fmt.Printf(msg+"\n", n)
+	} else {
+		fmt.Printf("%d is not a number\n", n)
+	}
+}
+
+func movieRating() {
+	if len(os.Args) != 2 {
+		fmt.Println("Requires age.")
+		return
+	}
+
+	if n, err := strconv.Atoi(os.Args[1]); err == nil && n > 0 {
+		if n > 17 {
+			fmt.Println("R-Rated")
+		} else if n > 12 && n < 18 {
+			fmt.Println("PG-13")
+		} else {
+			fmt.Println("PG-Rated")
+		}
+		return
+	} else {
+		fmt.Printf("Wrong age: %d.\n", n)
+	}
+
 }
 
 func convertFeetToMeters() {
