@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math"
 	"os"
@@ -22,7 +23,87 @@ type Creds struct {
 }
 
 func main() {
-	operationsTable()
+	sumOfnNumbers()
+}
+
+func sumOfnNumbers() {
+	reader := bufio.NewReader(os.Stdin)
+	var n1, n2, sum int
+	var msg string
+	var errConv error
+	fmt.Println("Please enter 1st number:")
+	input, err := reader.ReadString('\n')
+	n1, errConv = strconv.Atoi(strings.TrimSpace(input))
+	if err != nil || errConv != nil {
+		fmt.Println("Please enter a number")
+		return
+	}
+
+	fmt.Println("Please enter 2st number:")
+	input, err = reader.ReadString('\n')
+	if n2, errConv = strconv.Atoi(strings.TrimSpace(input)); err != nil || errConv != nil {
+		fmt.Println("Please enter a number")
+		return
+	}
+
+	if n1 > n2 {
+		fmt.Println("1st number must be greater then 2nd")
+		return
+	}
+
+	for ; n1 < n2; n1++ {
+		msg += strconv.Itoa(n1) + " + "
+		sum += n1
+	}
+	sum += n2
+	msg += strconv.Itoa(n2)
+	fmt.Println(msg+" = ", sum)
+}
+
+func sumOfNumbersVerbose() {
+	var (
+		i   int
+		res string
+		sum int
+	)
+
+	for {
+		i++
+		if i < 10 {
+			sum += i
+			res += strconv.Itoa(i) + " + "
+		}
+		if i == 10 {
+			sum += i
+			res += strconv.Itoa(i) + " = " + strconv.Itoa(sum)
+			break
+		}
+	}
+
+	fmt.Println(res)
+}
+
+func sumOfNumbers() {
+	if len(os.Args) < 2 {
+		fmt.Println("Invalid input")
+		return
+	}
+
+	n, err := strconv.Atoi(os.Args[1])
+	if err != nil {
+		fmt.Println("Please enter number")
+		return
+	}
+	var sum int
+
+	for {
+		sum += n
+		n--
+		if n == 0 {
+			break
+		}
+	}
+	fmt.Printf("Total is %d\n", sum)
 }
 
 func operationsTable() {
@@ -46,43 +127,37 @@ func operationsTable() {
 		return
 	}
 
-	s, err := strconv.Atoi(os.Args[2])
-	if err != nil || s < 1 {
+	s, _ := strconv.Atoi(os.Args[2])
 
-	}
-
-	header := os.Args[1]
+	fmt.Printf("%5s", os.Args[1])
 	for i := 0; i <= s; i++ {
-		header += "\t" + strconv.Itoa(i)
+		fmt.Printf("%5d", i)
 	}
-	fmt.Println(header)
+	fmt.Println()
 
 	for i := 0; i <= s; i++ {
-		row := strconv.Itoa(i) + "\t"
+		fmt.Printf("%5d", i)
 		for j := 0; j <= s; j++ {
+			var res int
 			switch os.Args[1] {
 			case "*":
-				row += strconv.Itoa(j*i) + "\t"
+				res = i * j
 			case "/":
-				if i == 0 || j == 0 {
-					row += strconv.Itoa(0) + "\t"
-				} else {
-					row += strconv.Itoa(i/j) + "\t"
+				if j != 0 {
+					res = i / j
 				}
 			case "-":
-				row += strconv.Itoa(j-i) + "\t"
+				res = i - j
 			case "+":
-				row += strconv.Itoa(j+i) + "\t"
+				res = i + j
 			case "%":
-				if i == 0 || j == 0 {
-					row += strconv.Itoa(0) + "\t"
-				} else {
-					row += strconv.Itoa(i%j) + "\t"
+				if j != 0 {
+					res = i * j
 				}
 			}
+			fmt.Printf("%5d", res)
 		}
-
-		fmt.Println(row)
+		fmt.Println()
 	}
 }
 
