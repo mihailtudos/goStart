@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
 	"path"
 	"strconv"
@@ -23,7 +24,19 @@ type Creds struct {
 }
 
 func main() {
-	sumOfnEvenNumbers()
+	infiniteKill()
+}
+
+func infiniteKill() {
+	chars := []string{`\`, `/`, `|`, `-`}
+	rand.Seed(time.Now().UnixNano())
+	for {
+		idx := rand.Intn(len(chars))
+		fmt.Printf("%d", idx)
+		c := chars[idx]
+		fmt.Printf("\r%s Please Wait. Processing....", c)
+		time.Sleep(250 * time.Millisecond)
+	}
 }
 
 func sumOfnEvenNumbers() {
