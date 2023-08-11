@@ -29,7 +29,6 @@ func main() {
 
 func infiniteKill() {
 	chars := []string{`\`, `/`, `|`, `-`}
-	rand.Seed(time.Now().UnixNano())
 	for {
 		idx := rand.Intn(len(chars))
 		fmt.Printf("%d", idx)
