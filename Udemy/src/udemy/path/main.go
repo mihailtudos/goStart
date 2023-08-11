@@ -23,10 +23,10 @@ type Creds struct {
 }
 
 func main() {
-	sumOfnNumbers()
+	sumOfnEvenNumbers()
 }
 
-func sumOfnNumbers() {
+func sumOfnEvenNumbers() {
 	reader := bufio.NewReader(os.Stdin)
 	var n1, n2, sum int
 	var msg string
@@ -51,13 +51,17 @@ func sumOfnNumbers() {
 		return
 	}
 
-	for ; n1 < n2; n1++ {
-		msg += strconv.Itoa(n1) + " + "
-		sum += n1
+	for ; n1 <= n2; n1++ {
+		if n1%2 == 0 {
+			sum += n1
+			if n1+2 <= n2 {
+				msg += strconv.Itoa(n1) + " + "
+			} else {
+				msg += strconv.Itoa(n1)
+			}
+		}
 	}
-	sum += n2
-	msg += strconv.Itoa(n2)
-	fmt.Println(msg+" = ", sum)
+	fmt.Println(msg+" =", sum)
 }
 
 func sumOfNumbersVerbose() {
