@@ -51,7 +51,7 @@ func sumOfnEvenNumbers() {
 		return
 	}
 
-	for ; n1 <= n2; n1++ {
+	for {
 		if n1%2 == 0 {
 			sum += n1
 			if n1+2 <= n2 {
@@ -60,6 +60,10 @@ func sumOfnEvenNumbers() {
 				msg += strconv.Itoa(n1)
 			}
 		}
+		if n2 < n1 {
+			break
+		}
+		n1++
 	}
 	fmt.Println(msg+" =", sum)
 }
