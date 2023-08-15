@@ -5,12 +5,162 @@ import (
 	"golang.org/x/exp/slices"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 func main() {
-	moods2()
+	wordFinder()
+}
+
+func wordFinder() {
+	if len(os.Args) < 2 {
+		fmt.Println("Please give me a word to search.")
+		return
+	}
+
+	f := []string{"and", "or", "was", "the", "since", "very"}
+	words := strings.Fields("lazy cat jumps again and again and again since the beginning this was very important")
+	search := os.Args[1:]
+
+	for i, v := range words {
+		words[i] = strings.ToLower(strings.TrimSpace(v))
+	}
+
+	for i, v := range f {
+		f[i] = strings.ToLower(strings.TrimSpace(v))
+	}
+
+	for i, v := range search {
+		search[i] = strings.ToLower(strings.TrimSpace(v))
+	}
+
+	for i, v := range search {
+		if !slices.Contains(f, v) && slices.Contains(words[:], v) {
+			fmt.Printf("#%d - %v\n", i, v)
+		}
+	}
+}
+
+func sortArr() {
+	if len(os.Args) != 6 {
+		fmt.Println("Please give me up to 5 numbers.")
+		return
+	}
+
+	var numbers [5]int
+
+	for i, val := range os.Args[1:] {
+		if v, err := strconv.Atoi(val); err == nil {
+			numbers[i] = v
+			continue
+		}
+	}
+	for range numbers {
+		for i, v := range numbers {
+			if i < len(numbers)-1 && v > numbers[i+1] {
+				numbers[i], numbers[i+1] = numbers[i+1], numbers[i]
+			}
+		}
+	}
+	fmt.Printf("%v\n", numbers)
+
+}
+
+func avgSum() {
+	if len(os.Args) != 6 {
+		println("Please tell me numbers (maximum 5 numbers).")
+		return
+	}
+	var (
+		numbers [5]float64
+		sum     float64
+	)
+
+	for i, val := range os.Args[1:] {
+		if v, err := strconv.ParseFloat(val, 64); err == nil {
+			numbers[i] = v
+			continue
+		}
+		numbers[i] = 0
+	}
+
+	for _, v := range numbers {
+		sum += v
+	}
+
+	fmt.Printf("Your number: %v\n", numbers)
+	fmt.Printf("Average: %.2f\n", sum/float64(len(numbers)))
+}
+
+func searchBook() {
+	if len(os.Args) != 2 {
+		fmt.Println("Please enter a book title")
+		return
+	}
+	books := [...]string{
+		"Kafka's Revenge",
+		"Stay Golden",
+		"Everythingship",
+		"Kafka's Revenge 2nd Edition",
+	}
+
+	lq := strings.ToLower(os.Args[1])
+	var res bool
+	println("Search Results:")
+	for i, t := range books {
+		if strings.Contains(strings.ToLower(t), lq) {
+			res = true
+			fmt.Printf("#%d - %s\n", i, t)
+		}
+	}
+
+	if !res {
+		fmt.Printf("The book doesn't exist\n")
+	}
+}
+
+func currencyConvertor() {
+	m := 1
+	var err error
+	if len(os.Args) >= 2 {
+		if m, err = strconv.Atoi(os.Args[1]); err != nil {
+			fmt.Printf("First parameter must be a number %T given", os.Args[1])
+			return
+		}
+	}
+	const (
+		GBP = iota
+		RON
+		EUR
+	)
+	rates := []float64{
+		GBP: 1.2,
+		RON: 4.5,
+		EUR: 1.1}
+
+	fmt.Printf("%v GBP is %.2f\n", m, rates[GBP]*float64(m))
+	fmt.Printf("%v RON is %.2f\n", m, rates[RON]*float64(m))
+	fmt.Printf("%v EUR is %.2f\n", m, rates[EUR]*float64(m))
+}
+
+func wizardPrint() {
+	scientrists := [...][5]string{
+		{"First Name", "Last Name", "Nickname"},
+		{"Albert", "Einstein", "time"},
+		{"Isaac", "Newton", "apple"},
+		{"Stephen", "Hawking", "blackhole"},
+		{"Marie", "Curie", "radium"},
+		{"Charles", "Darwin", "fittest"}}
+	fmt.Println("==================================================")
+	for _, scientist := range scientrists {
+		for _, detail := range scientist {
+			fmt.Printf("%-15v", detail)
+		}
+		fmt.Println()
+	}
+	fmt.Println("==================================================")
 }
 
 func moods2() {
@@ -35,8 +185,6 @@ func moods2() {
 	var i int
 	if mood == "positive" {
 		i = 1
-	} else {
-		i = 0
 	}
 	var j = rand.Intn(len(moods[i]))
 	fmt.Printf("%s is feeling %s\n", name, moods[i][j])
