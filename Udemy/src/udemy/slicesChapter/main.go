@@ -15,11 +15,19 @@ func main() {
 }
 
 func zeroSilces() {
-	names := []string{}
-	distances := []int{}
-	data := []uint8{}
-	ratios := []float64{}
-	alive := []bool{}
+	var (
+		names     []string
+		distances []int
+		data      []uint8
+		ratios    []float64
+		alive     []bool
+	)
+
+	names = []string{}
+	distances = []int{}
+	data = []uint8{}
+	ratios = []float64{}
+	alive = []bool{}
 
 	fmt.Printf("names:     %T %d %t\n", names, len(names), nil == names)
 	fmt.Printf("distances: %T %d %t\n", distances, len(distances), nil == distances)
