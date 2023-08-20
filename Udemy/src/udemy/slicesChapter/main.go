@@ -24,12 +24,22 @@ func compareSlices() {
 	fmt.Printf("%#v\n", namesA)
 	fmt.Printf("%#v\n", namesB)
 
-	if n := slices.Compare(namesA, namesB); n != -1 {
-		fmt.Printf("They are equal.\n")
-	} else {
-		fmt.Printf("They not are equal.\n")
+	if len(namesA) == len(namesB) {
+		equal := true
+		for i, v := range namesA {
+			if namesB[i] != v {
+				equal = false
+				break
+			}
+		}
+
+		if equal {
+			fmt.Printf("They are equal.\n")
+			return
+		}
 	}
 
+	fmt.Printf("They not are equal.\n")
 }
 
 func fixSlicesIssue() {
