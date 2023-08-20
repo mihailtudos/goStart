@@ -11,15 +11,31 @@ import (
 )
 
 func main() {
-	nilSlices()
+	zeroSilces()
+}
+
+func zeroSilces() {
+	names := []string{}
+	distances := []int{}
+	data := []uint8{}
+	ratios := []float64{}
+	alive := []bool{}
+
+	fmt.Printf("names:     %T %d %t\n", names, len(names), nil == names)
+	fmt.Printf("distances: %T %d %t\n", distances, len(distances), nil == distances)
+	fmt.Printf("data:      %T %d %t\n", data, len(data), nil == data)
+	fmt.Printf("ratios:    %T %d %t\n", ratios, len(ratios), nil == ratios)
+	fmt.Printf("alive:     %T %d %t\n", alive, len(alive), nil == alive)
 }
 
 func nilSlices() {
-	var names []string
-	var distances []int
-	var data []uint8
-	var ratios []float64
-	var alive []bool
+	var (
+		names     []string
+		distances []int
+		data      []uint8
+		ratios    []float64
+		alive     []bool
+	)
 
 	fmt.Printf("names:     %T %d %t\n", names, len(names), nil == names)
 	fmt.Printf("distances: %T %d %t\n", distances, len(distances), nil == distances)
