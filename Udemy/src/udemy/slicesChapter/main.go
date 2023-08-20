@@ -16,17 +16,13 @@ func main() {
 }
 
 func fixSlicesIssue() {
-	var (
-		names []string
-	)
-
-	names = []string{
+	names := []string{
 		"Einstein",
 		"Shepard",
 		"Tesla",
 	}
 
-	var books []string = []string{
+	books := []string{
 		"Stay Golden",
 		"Fire",
 		"Kafka's Revenge",
