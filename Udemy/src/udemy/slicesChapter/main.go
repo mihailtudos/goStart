@@ -12,7 +12,24 @@ import (
 )
 
 func main() {
-	fixSlicesIssue()
+	compareSlices()
+}
+
+func compareSlices() {
+	namesA := strings.Split("Da Vinci, Wozniak, Carmack", ", ")
+	namesB := []string{"Wozniak", "Da Vinci", "Carmack"}
+
+	sort.Strings(namesB)
+	sort.Strings(namesA)
+	fmt.Printf("%#v\n", namesA)
+	fmt.Printf("%#v\n", namesB)
+
+	if n := slices.Compare(namesA, namesB); n != -1 {
+		fmt.Printf("They are equal.\n")
+	} else {
+		fmt.Printf("They not are equal.\n")
+	}
+
 }
 
 func fixSlicesIssue() {
