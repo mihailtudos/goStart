@@ -13,7 +13,89 @@ import (
 )
 
 func main() {
-	fixSlice()
+	housingPrices()
+}
+
+func housingPrices() {
+	const (
+		header = "Location,Size,Beds,Baths,Price"
+		data   = `New York,100,2,1,100000
+New York,150,3,2,200000
+Paris,200,4,3,400000
+Istanbul,500,10,5,1000000`
+
+		separator = ","
+	)
+	type row [5]string
+	head := row(strings.Split(header, separator))
+	var (
+		locations                  []string
+		sizes, beds, baths, prices []int
+	)
+	rows := strings.Split(data, "\n")
+
+	for _, v := range rows {
+		for i, r := range strings.Split(v, separator) {
+			var (
+				v   int
+				err error
+			)
+			if v, err = strconv.Atoi(r); err != nil {
+				v = 0
+			}
+			switch i {
+			case 0:
+				locations = append(locations, r)
+			case 1:
+				sizes = append(sizes, v)
+			case 2:
+				beds = append(beds, v)
+			case 3:
+				baths = append(baths, v)
+			case 4:
+				prices = append(prices, v)
+			}
+		}
+	}
+
+	for i := range head {
+		fmt.Printf("%-15s", head[i])
+	}
+	fmt.Printf("\n%s\n", strings.Repeat("=", 75))
+
+	for i := range rows {
+		fmt.Printf("%-15s", locations[i])
+		fmt.Printf("%-15d", sizes[i])
+		fmt.Printf("%-15d", beds[i])
+		fmt.Printf("%-15d", baths[i])
+		fmt.Printf("%-15d\n", prices[i])
+	}
+	fmt.Printf("%s\n%-15s%-15.2f%-15.2f%-15.2f%-15.2f\n", strings.Repeat("=", 75), "", avgInts(sizes), avgInts(beds), avgInts(baths), avgInts(prices))
+}
+
+func avgInts(data []int) float64 {
+	var sum float64
+	for i := range data {
+		sum += float64(data[i])
+	}
+	return sum / float64(len(data))
+}
+
+func appendAndSort() {
+	inputs := os.Args[1:]
+	if len(inputs) == 0 {
+		fmt.Println("provide a few numbers")
+		return
+	}
+
+	var numbers []int
+	for _, v := range inputs {
+		if number, err := strconv.Atoi(v); err == nil {
+			numbers = append(numbers, number)
+		}
+	}
+	sort.Ints(numbers)
+	fmt.Printf("%v", numbers)
 }
 
 func fixSlice() {
