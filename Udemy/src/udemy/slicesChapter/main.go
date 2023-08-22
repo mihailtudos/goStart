@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"golang.org/x/exp/slices"
 	"math/rand"
@@ -12,7 +13,43 @@ import (
 )
 
 func main() {
-	compareSlices()
+	fixSlice()
+}
+
+func fixSlice() {
+	toppings := []string{"black olives", "green peppers"}
+
+	toppings = append(toppings, "extra cheese", "onions")
+
+	fmt.Printf("pizza       : %s\n", toppings)
+}
+
+func appendNil() {
+	var toppings []string
+	var departures []time.Time
+	var graduationYears []int
+	var states []bool
+
+	toppings = append(toppings, "Pineapple", "Ham", "Pepperoni", "Cheese", "Mushrooms")
+	departures = append(departures, time.Now(), time.Now().Add(time.Hour*2), time.Now().AddDate(0, 1, 0))
+	graduationYears = append(graduationYears, 2020, 2021, 2022)
+	states = append(states, true, true, true, false)
+
+	fmt.Printf("pizza toppings:   %v\n", toppings)
+	fmt.Printf("graduation years: %v\n", graduationYears)
+	fmt.Printf("states: 	  %v\n", states)
+	fmt.Printf("states: 	  %v\n", departures)
+}
+
+func compareSlices2() {
+	png, header := []byte{'P', 'N', 'G'}, []byte{}
+	header = append(header, png...)
+
+	if bytes.Compare(png, header) != 0 {
+		fmt.Printf("They are equal")
+	} else {
+		fmt.Printf("They are not equal")
+	}
 }
 
 func compareSlices() {
