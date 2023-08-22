@@ -13,7 +13,39 @@ import (
 )
 
 func main() {
-	slicingBasics()
+	slicingByArgs()
+}
+
+func slicingByArgs() {
+	ships := []string{"Normandy", "Verrikan", "Nexus", "Warsaw"}
+	fmt.Printf("\t%q\n\n", ships)
+	positions := os.Args[1:]
+	if len(positions) < 1 || len(positions) > 2 {
+		fmt.Println("\tProvide only the [starting] and [stopping] positions")
+		return
+	}
+
+	start, stop := 0, len(ships)
+
+	if len(positions) >= 1 {
+		if v, err := strconv.Atoi(positions[0]); err == nil && v > -1 && v <= len(ships) {
+			start = v
+		} else {
+			fmt.Println("\tWrong positions")
+			return
+		}
+	}
+
+	if len(positions) == 2 {
+		if v, err := strconv.Atoi(positions[1]); err == nil && v > -1 && start <= v {
+			stop = v
+		} else {
+			fmt.Println("\tWrong positions")
+			return
+		}
+	}
+
+	fmt.Printf("\t%v\n", ships[start:stop])
 }
 
 func slicingBasics() {
