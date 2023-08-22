@@ -13,7 +13,34 @@ import (
 )
 
 func main() {
-	housingPrices()
+	slicingBasics()
+}
+
+func slicingBasics() {
+	data := "2 4 6 1 3 5"
+	stringNumbers := strings.Split(data, " ")
+	var numbers []int
+	for i := range stringNumbers {
+		if number, err := strconv.Atoi(stringNumbers[i]); err == nil {
+			numbers = append(numbers, number)
+		}
+	}
+	l := len(numbers)
+	fmt.Printf("numbers    : %v\n", numbers)
+	evans := numbers[:3]
+	fmt.Printf("evans      : %v\n", evans)
+	odds := numbers[3:]
+	fmt.Printf("odds       : %v\n", odds)
+	midd := numbers[l/2 : l/2+2]
+	fmt.Printf("midd       : %v\n", midd)
+	two := numbers[:2]
+	fmt.Printf("two        : %v\n", two)
+	lastTwo := numbers[l-2:]
+	fmt.Printf("lastTwo    : %v\n", lastTwo)
+	eventLast := numbers[2:3]
+	fmt.Printf("last even  : %v\n", eventLast)
+	oddLastTwo := numbers[4:]
+	fmt.Printf("odd last 2 : %v\n", oddLastTwo)
 }
 
 func housingPrices() {
