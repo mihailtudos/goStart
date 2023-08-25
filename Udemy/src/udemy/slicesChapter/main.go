@@ -13,7 +13,72 @@ import (
 )
 
 func main() {
-	slicingByArgs()
+	slicingHousingPrices()
+}
+
+func slicingHousingPrices() {
+	const (
+		data = `Location,Size,Beds,Baths,Price
+New York,100,2,1,100000
+New York,150,3,2,200000
+Paris,200,4,3,400000
+Istanbul,500,10,5,1000000`
+
+		separator = ","
+	)
+
+	var (
+		to, from, idx int
+		rows          []string
+	)
+
+	rows = strings.Split(data, "\n")
+	header := strings.Split(rows[0], separator)
+
+	positions := os.Args[1:]
+	if len(positions) >= 1 {
+		idx = indexOf(header, positions[0])
+		if idx != -1 {
+			from = idx
+		}
+	}
+
+	if len(positions) >= 2 {
+		idx2 := indexOf(header, positions[1])
+		if idx2 != -1 {
+			if idx > idx2 {
+				from = 0
+			}
+
+			to = idx2 + 1
+		} else {
+			to = len(header)
+		}
+	}
+
+	if to == 0 {
+		to = len(header)
+	}
+
+	for _, v := range header[from:to] {
+		fmt.Printf("%-15s", v)
+	}
+
+	fmt.Println()
+	for _, row := range rows[1:] {
+		fmt.Println()
+		col := strings.Split(row, separator)
+
+		for _, v := range col[from:to] {
+			fmt.Printf("%-15s", v)
+		}
+	}
+}
+
+func indexOf(header []string, s string) int {
+	return slices.IndexFunc(header, func(item string) bool {
+		return strings.ToLower(item) == strings.ToLower(s)
+	})
 }
 
 func slicingByArgs() {
