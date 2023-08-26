@@ -13,7 +13,38 @@ import (
 )
 
 func main() {
-	slicingHousingPrices()
+	//why 6th element is copied
+	//words := []string{"lucy", "in", "the", "sky", "with", "diamonds"}
+	//fmt.Println(cap(words))
+	//words = append(words[:1], "is", "everywhere")
+	//fmt.Println(cap(words))
+	//fmt.Println(words[4:6])
+	//words = append(words, words[len(words)+1:cap(words)]...)
+	//fmt.Println(cap(words))
+	internalsBackingArr()
+}
+
+func internalsBackingArr() {
+	// DON'T TOUCH THE FOLLOWING CODE
+	nums := []int{56, 89, 15, 25, 30, 50}
+
+	// ----------------------------------------
+	// ONLY ADD YOUR CODE HERE
+	//
+	// Ensure that nums slice never changes even though
+	// the mine slice changes.
+	mine := append([]int(nil), nums...)
+	// ----------------------------------------
+
+	// DON'T TOUCH THE FOLLOWING CODE
+	//
+	// This code changes the elements of the nums
+	// slice.
+	//
+	mine[0], mine[1], mine[2] = -50, -100, -150
+
+	fmt.Println("Mine         :", mine)
+	fmt.Println("Original nums:", nums[:3])
 }
 
 func slicingHousingPrices() {
