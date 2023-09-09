@@ -6,22 +6,242 @@ import (
 	"golang.org/x/exp/slices"
 	"math/rand"
 	"os"
+	"runtime"
+	"runtime/debug"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+	"unsafe"
 )
 
+const size = 1e7
+
 func main() {
-	//why 6th element is copied
-	//words := []string{"lucy", "in", "the", "sky", "with", "diamonds"}
-	//fmt.Println(cap(words))
-	//words = append(words[:1], "is", "everywhere")
-	//fmt.Println(cap(words))
-	//fmt.Println(words[4:6])
-	//words = append(words, words[len(words)+1:cap(words)]...)
-	//fmt.Println(cap(words))
-	internalsBackingArr()
+	fixBackingArrayIssue()
+}
+
+func fixBackingArrayIssue() {
+	// DON'T TOUCH THE FOLLOWING CODE
+	nums := []int{56, 89, 15, 25, 30, 50}
+
+	// ----------------------------------------
+	// ONLY ADD YOUR CODE HERE
+	//
+	// Ensure that nums slice never changes even though
+	// the mine slice changes.
+	mine := append([]int(nil), nums[:3]...)
+
+	// ----------------------------------------
+
+	// DON'T TOUCH THE FOLLOWING CODE
+	//
+	// This code changes the elements of the nums
+	// slice.
+	//
+	mine[0], mine[1], mine[2] = -50, -100, -150
+
+	fmt.Println("Mine         :", mine)
+	fmt.Println("Original nums:", nums[:3])
+}
+
+func observeCapGrowth() {
+	arr := []int(nil)
+	prevSize := 1
+	for g, i := 0, 0; i < 1e7; i++ {
+		if len(arr) == cap(arr) {
+			fmt.Printf("len: %d cap: %d grow: %d%%\n", len(arr), cap(arr), g)
+			if cap(arr) != 0 {
+				prevSize = cap(arr)
+			}
+		}
+		arr = append(arr, i)
+		g = (cap(arr) * 100 / prevSize) - 100
+	}
+	var (
+		nums   []int
+		oldCap float64
+	)
+	for len(nums) < 1e7 {
+		// get the capacity
+		c := float64(cap(nums))
+
+		// only print when the capacity changes
+		if c == 0 || c != oldCap {
+			// print also the growth ratio: c/oldCap
+			fmt.Printf("len:%-15d cap:%-15g growth:%-15.2f\n",
+				len(nums), c, c/oldCap)
+		}
+
+		// keep track of the previous capacity
+		oldCap = c
+
+		// append an arbitrary element to the slice
+		nums = append(nums, 1)
+	}
+}
+
+func observeLenCap() {
+	// --- #1 ---
+	// 1. create a new slice named: games
+	//var games []string
+	// 2. print the length and capacity of the games slice
+	//fmt.Printf("Len: %d	Cap: %d\n", len(games), cap(games))
+	// 3. comment out the games slice
+	//    then declare it as an empty slice
+	//games := []string{}
+	// 4. print the length and capacity of the games slice
+	//fmt.Printf("Len: %d	Cap: %d\n", len(games), cap(games))
+	// 5. append the elements: "pacman", "mario", "tetris", "doom"
+	//games = append(games, "pacman", "mario", "tetris", "doom")
+	// 6. print the length and capacity of the games slice
+	//fmt.Printf("Len: %d	Cap: %d\n", len(games), cap(games))
+	// 7. comment out everything
+	//
+	// 8. declare the games slice again using a slice literal
+	//    (use the same elements from step 5)
+	games := []string{"pacman", "mario", "tetris", "doom"}
+	// --- #2 ---
+	// 1. use a loop from 0 to 4 to slice the games slice, element by element.
+	//
+	// 2. print its length and capacity along the way (in the loop).
+	fmt.Println()
+	for i := 0; i < 4; i++ {
+		fmt.Printf("games[:%d]'s len: %d cap: %d\n", i, len(games[:i]), cap(games[:i]))
+	}
+
+	// --- #3 ---
+	// 1. slice the games slice up to zero element
+	//    (save the result to a new slice named: "zero")
+	// 2. print the games and the new slice's len and cap
+
+	zero := games[:0]
+	fmt.Printf("games's     len: %d cap: %d\n", len(games), cap(games))
+	fmt.Printf("zero's      len: %d cap: %d\n", len(zero), cap(zero))
+
+	// 3. append a new element to the new slice
+	zero = append(zero, "super")
+
+	// 4. print the new slice's lens and caps
+	fmt.Printf("zero's      len: %d cap: %d\n", len(zero), cap(zero))
+	// 5. repeat the last two steps 5 times (use a loop)
+	for _, v := range []string{"ultima", "dagger", "pong", "coldspot", "zetra"} {
+		zero = append(zero, v)
+		fmt.Printf("zero's      len: %d cap: %d\n", len(zero), cap(zero))
+	}
+
+	fmt.Println()
+
+	for n := range zero {
+		s := zero[:n]
+		fmt.Printf("zero[:%d]'s  len: %d cap: %d - %q\n", n, len(s), cap(s), s)
+	}
+
+	fmt.Println()
+
+	zero = zero[:cap(zero)]
+	for n := range zero {
+		s := zero[:n]
+		fmt.Printf("zero[:%d]'s  len: %d cap: %d - %q\n", n, len(s), cap(s), s)
+	}
+
+	fmt.Println()
+	games[0] = "command & conquer games"
+	zero[0] = "command & conquer"
+
+	fmt.Printf("games : %q\n", games)
+	fmt.Printf("zero  : %q\n", zero)
+
+	// --- #7 ---
+	// try to slice the games slice beyond its capacity
+	fmt.Printf("games : c: %q\n", games[:5])
+}
+
+func observeMemUsage() {
+	debug.SetGCPercent(-1)
+
+	// run the program to see the initial memory usage.
+	report("initial memory usage")
+
+	// 1. allocate an array with 10 million int elements
+	//    the array's size will be equal to ~80MB
+	//    hint: use the `size` constant above.
+	var arr [size]int
+
+	// 2. print the memory usage (use the report func).
+	report("First array memory usage")
+
+	// 3. copy the array to a new array.
+	newArr := arr
+
+	// 4. print the memory usage
+	report("Second array memory usage")
+
+	// 5. pass the array to the passArray function
+	passArray(newArr)
+	report("After the call array memory usage")
+	// 6. convert one of the arrays to a slice
+	slice1 := arr[:]
+
+	// 7. slice only the first 1000 elements of the array
+	slice2 := arr[:1e3]
+
+	// 8. slice only the elements of the array between 1000 and 10000
+	slice3 := arr[1e3:1e4]
+
+	// 9. print the memory usage (report func)
+	fmt.Println(newArr[0], slice2[0], slice1[0], slice3[0])
+	report("After slicing the arrays memory usage")
+	// 10. pass the one of the slices to the passSlice function
+	passSlice(slice3)
+	// 11. print the sizes of the arrays and slices
+	//     hint: use the unsafe.Sizeof function
+	//     see more here: https://golang.org/pkg/unsafe/#Sizeof
+	fmt.Printf("slice1 size: %d \n", unsafe.Sizeof(slice1)/8)
+	fmt.Printf("slice2 size: %d \n", unsafe.Sizeof(slice2)/8)
+	fmt.Printf("slice3 size: %d \n", unsafe.Sizeof(slice3)/8)
+	fmt.Printf("Arr size: %d \n", unsafe.Sizeof(arr)/8)
+	fmt.Printf("NewArr size: %d \n", unsafe.Sizeof(newArr)/8)
+}
+
+// passes [size]int array about 80MB!
+//
+// observe that passing an array to a function (or assigning it to a variable)
+// affects the memory usage dramatically
+func passArray(items [size]int) {
+	items[0] = 100
+	report("inside passArray")
+}
+
+// only passes 24-bytes of slice header
+//
+// observe that passing a slice doesn't affect the memory usage
+func passSlice(items []int) {
+	items[0] = 100
+	report("inside passSlice")
+}
+
+// reports the current memory usage
+// don't worry about this code
+func report(msg string) {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	fmt.Printf("[%s]\n", msg)
+	fmt.Printf("\t> Memory Usage: %v KB\n", m.Alloc/1024)
+}
+
+func sortMiddle() {
+	items := []string{
+		"pacman", "mario", "tetris", "doom", "galaga", "frogger",
+		"asteroids", "simcity", "metroid", "defender", "rayman",
+		"tempest", "ultima",
+	}
+
+	fmt.Println("Original:", items)
+	m := len(items) / 2
+	middle := items[m-1 : m+2]
+	sort.Strings(middle)
+	fmt.Println("Sorted  :", items)
 }
 
 func internalsBackingArr() {
