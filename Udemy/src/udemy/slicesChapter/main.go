@@ -5,7 +5,9 @@ import (
 	"fmt"
 	s "github.com/inancgumus/prettyslice"
 	"github.com/mihailtudos/slicesChater/api"
+	api2 "github.com/mihailtudos/slicesChater/api2"
 	"golang.org/x/exp/slices"
+	"io/ioutil"
 	"math/rand"
 	"os"
 	"runtime"
@@ -20,7 +22,32 @@ import (
 const size = 1e7
 
 func main() {
-	limitBackingArrSharing()
+	fixMemoryLeak()
+}
+
+func fixMemoryLeak() {
+	// reports the initial memory usage
+	api2.Report()
+
+	// returns a slice with 10 million elements.
+	// it allocates 65 MB of memory space.
+	millions := api2.Read()
+
+	// -----------------------------------------------------
+	// ✪ ONLY CHANGE THE CODE IN THIS AREA ✪
+
+	last10 := millions[len(millions)-10:]
+
+	millions = append([]int(nil), last10...)
+	fmt.Printf("\nLast 10 elements: %d\n\n", last10)
+
+	// ✪ ONLY CHANGE THE CODE IN THIS AREA ✪
+	// -----------------------------------------------------
+
+	api2.Report()
+
+	// don't worry about this code.
+	fmt.Fprintln(ioutil.Discard, millions[0])
 }
 
 func limitBackingArrSharing() {
