@@ -22,7 +22,86 @@ import (
 const size = 1e7
 
 func main() {
-	addLines()
+	printLogs()
+}
+
+func printLogs() {
+	// There are 3 request totals per day (8-hourly)
+	const N = 3
+
+	// DAILY REQUESTS DATA (8-HOURLY TOTALS PER DAY)
+	//reqs := []int{
+	//	500, 600, 250, // 1st day: 1350 requests
+	//	200, 400, 50, // 2nd day: 650 requests
+	//	900, 800, 600, // 3rd day: 2300 requests
+	//	750, 250, 100, // 4th day: 1100 requests
+	//	// grand total: 5400 requests
+	//}
+
+	reqs := []int{
+		500, 600, 250,
+		200, 400, 50,
+		900, 800, 600,
+		750, 250, 100,
+		150, 654, 235,
+		320, 534, 765,
+		121, 876, 285,
+		543, 642,
+	}
+
+	// ================================================
+	// #1: Make a new slice with the exact size needed.
+
+	l := len(reqs)
+	size := l / N // you need to find the size.
+	if l%N != 0 {
+		size++
+	}
+
+	daily := make([][]int, 0, size)
+
+	// ================================================
+
+	// ================================================
+	// #2: Group the `reqs` per day into the slice: `daily`.
+	//
+	// So the daily will be:
+	// [
+	//  [500, 600, 250]
+	//  [200, 400, 50]
+	//  [900, 800, 600]
+	//  [750, 250, 100]
+	// ]
+
+	for i := 0; i < size; i++ {
+		arr := make([]int, 3)
+		copy(arr, reqs[i*N:])
+		daily = append(daily, arr)
+	}
+
+	// ================================================
+	// #3: Print the results
+
+	// Print a header
+	fmt.Printf("%-10s%-10s\n", "Day", "Requests")
+	fmt.Println(strings.Repeat("=", 20))
+
+	// Loop over the daily slice and its inner slices to find
+	// the daily totals and the grand total.
+	// ...
+
+	gt := 0
+	for i, d := range daily {
+		sum := 0
+		for _, v := range d {
+			fmt.Printf("%-10d%-10d\n", i+1, v)
+			sum += v
+		}
+		fmt.Printf("%9s %-10d\n\n", "TOTAL:", sum)
+		gt += sum
+	}
+	fmt.Printf("%9s %-10d\n\n", "GRAND:", gt)
+	// ================================================
 }
 
 func addLines() {
