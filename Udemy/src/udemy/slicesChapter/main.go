@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	s "github.com/inancgumus/prettyslice"
 	"golang.org/x/exp/slices"
 	"math/rand"
 	"os"
@@ -18,7 +19,49 @@ import (
 const size = 1e7
 
 func main() {
-	correctLyrics()
+	advOpsPractice()
+}
+
+func advOpsPractice() {
+	// #1: Create a string slice: `names` with a length and
+	//     capacity of 5, and print it.
+	names := make([]string, 5)
+	s.Show("1st step", names)
+
+	// #2: Append the following names to the names slice:
+	names = append(names, "einstein", "tesla", "aristotle")
+	s.Show("2nd step", names)
+
+	//#3: Overwrite the name slice by creating a new slice
+	//     using make().
+
+	names = make([]string, 0, 5)
+	names = append(names, "einstein", "tesla", "aristotle")
+	s.Show("3rd step", names)
+
+	// #4: Copy only the first two elements of the following
+	//     array to the last two elements of the `names` slice.
+
+	moreNames := [...]string{"plato", "khayyam", "ptolemy"}
+	copy(names[3:5], moreNames[:2])
+	names = names[:cap(names)]
+	s.Show("4th step", names)
+
+	// #5:  Only copy the last 3 elements of the `names` slice
+	//      to a new slice: `clone`.
+
+	clone := make([]string, len(names[2:]), cap(names))
+	copy(clone[:], names[2:])
+
+	s.Show("5th step (before append)", clone)
+	clone = append(clone, names[:2]...)
+	s.Show("5th step (after append)", clone)
+
+	// #6: Slice the `clone` slice between 2nd and 4th (inclusive)
+	//     elements into a new slice: `sliced`.
+	sliced := clone[1:4:4]
+	sliced = append(sliced, "hypatia")
+	s.Show("6th step", clone, sliced)
 }
 
 func correctLyrics() {
