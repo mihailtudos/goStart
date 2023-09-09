@@ -22,7 +22,54 @@ import (
 const size = 1e7
 
 func main() {
-	fixMemoryLeak()
+	addLines()
+}
+
+func addLines() {
+	// You need to add a newline after each sentence in another slice.
+	// Don't touch the following code.
+	lyric := strings.Fields(`yesterday all my troubles seemed so far away now it looks as though they are here to stay oh I believe in yesterday`)
+
+	// ===================================
+	//
+	// ~~~ CHANGE THIS CODE ~~~
+	//
+	fix := make([]string, len(lyric)+3)
+	cuts := []int{8, 10, 5}
+
+	for n, i := 0, 0; n < len(lyric); i++ {
+		n += copy(fix[n+i:], lyric[n:n+cuts[i]])
+		fix[n+i] = "\n"
+	}
+
+	// ===================================
+
+	// Currently, it prints every sentence on the same line.
+	// Don't touch the following code.
+	s.Show("fix slice", fix)
+
+	for _, w := range fix {
+		fmt.Print(w)
+		if w != "\n" {
+			fmt.Print(" ")
+		}
+	}
+}
+
+func init() {
+	//
+	// YOU DON'T NEED TO TOUCH THIS
+	//
+	// This initializes some options for the prettyslice package.
+	// You can change the options if you want.
+	//
+	// This code runs before the main function above.
+	//
+	// s.Colors(false)     // if your editor is light background color then enable this
+	//
+	s.PrintBacking = true  // prints the backing arrays
+	s.MaxPerLine = 5       // prints max 15 elements per line
+	s.SpaceCharacter = '⏎' // print this instead of printing a newline (for debugging)
 }
 
 func fixMemoryLeak() {
