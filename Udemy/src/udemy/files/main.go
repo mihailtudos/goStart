@@ -2,11 +2,61 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
+	"strconv"
 )
 
 func main() {
+	sortToFile2()
+}
+
+func sortToFile2() {
+	items := os.Args[1:]
+	if len(items) == 0 {
+		fmt.Println("Send me some items and I will sort them")
+		return
+	}
+
+	sort.Strings(items)
+
+	var data []byte
+	for i, s := range items {
+		s = strconv.Itoa(i) + ". " + s
+		data = append(data, s...)
+		data = append(data, '\n')
+	}
+
+	err := ioutil.WriteFile("sorted.txt", data, 0644)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func sortAndWriteToFile() {
+	args := os.Args[1:]
+	if len(args) == 0 {
+		fmt.Println("Send me some items and I will sort them")
+		return
+	}
+
+	sort.Strings(args)
+	items := []byte(nil)
+	for _, v := range args {
+		items = append(items, v...)
+		items = append(items, '\n')
+	}
+
+	err := os.WriteFile("sorted.txt", items, 0644)
+	if err != nil {
+		fmt.Println("Something went wrong when writing to file.", err)
+	}
+}
+
+func writeToFile() {
 	args := os.Args[1:]
 	if len(args) != 1 {
 		fmt.Println("Please provide directory path")
