@@ -18,7 +18,21 @@ import (
 const size = 1e7
 
 func main() {
-	fixBackingArrayIssue()
+	sortBackingArray()
+}
+
+func sortBackingArray() {
+	items := []string{
+		"pacman", "mario", "tetris", "doom", "galaga", "frogger",
+		"asteroids", "simcity", "metroid", "defender", "rayman",
+		"tempest", "ultima",
+	}
+
+	fmt.Println("Original:", items)
+	midd := items[len(items)/2-1 : len(items)/2+2]
+	sort.Strings(midd)
+	fmt.Println()
+	fmt.Println("Sorted  :", items)
 }
 
 func fixBackingArrayIssue() {
