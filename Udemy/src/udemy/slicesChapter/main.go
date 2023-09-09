@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	s "github.com/inancgumus/prettyslice"
+	"github.com/mihailtudos/slicesChater/api"
 	"golang.org/x/exp/slices"
 	"math/rand"
 	"os"
@@ -19,7 +20,21 @@ import (
 const size = 1e7
 
 func main() {
-	advOpsPractice()
+	limitBackingArrSharing()
+}
+
+func limitBackingArrSharing() {
+	// DO NOT CHANGE ANYTHING IN THIS CODE.
+
+	// get the first three elements from api.temps
+	received := api.Read(0, 3)
+
+	// append changes the api package's temps slice's
+	// backing array as well.
+	received = append(received, []int{1, 3}...)
+
+	fmt.Println("api.temps     :", api.All())
+	fmt.Println("main.received :", received)
 }
 
 func advOpsPractice() {
